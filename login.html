@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgriCRM — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --soil:#1e1208;--bark:#2d1f0e;--moss:#2b4a1e;--leaf:#4a7c35;
+  --sage:#6da84e;--mint:#a8d48f;--cream:#f5eed8;--parch:#ede0c0;
+  --gold:#c49a1a;--rust:#7a2e1a;--white:#fff;
+  --glass:rgba(255,255,255,0.07);--glassborder:rgba(255,255,255,0.13);
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bark);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;position:relative;
+}
+
+/* ─── Layered organic background ─── */
+.bg-wrap{position:fixed;inset:0;z-index:0;overflow:hidden}
+.bg-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 15%,rgba(74,124,53,.28) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 90% at 90% 80%,rgba(196,154,26,.18) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 100%,rgba(30,18,8,.9) 0%,transparent 60%);
+}
+.bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+/* Floating seed orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(60px);animation:drift 12s ease-in-out infinite alternate;opacity:.35}
+.orb1{width:320px;height:320px;background:var(--leaf);top:-80px;left:-80px;animation-delay:0s}
+.orb2{width:240px;height:240px;background:var(--gold);bottom:-60px;right:-40px;animation-delay:-4s}
+.orb3{width:180px;height:180px;background:var(--moss);top:40%;left:60%;animation-delay:-8s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.08)}}
+
+/* ─── Decorative leaves ─── */
+.leaf-deco{position:absolute;font-size:80px;opacity:.06;user-select:none;animation:sway 8s ease-in-out infinite alternate}
+.leaf-deco:nth-child(1){top:8%;left:5%;animation-delay:0s}
+.leaf-deco:nth-child(2){bottom:12%;right:8%;font-size:120px;animation-delay:-3s}
+.leaf-deco:nth-child(3){top:55%;left:2%;font-size:60px;animation-delay:-6s}
+@keyframes sway{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+
+/* ─── Card ─── */
+.card-wrap{
+  position:relative;z-index:10;
+  display:flex;gap:0;
+  background:rgba(15,10,5,.65);
+  border:1px solid var(--glassborder);
+  border-radius:28px;
+  box-shadow:0 40px 100px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(24px);
+  overflow:hidden;
+  width:860px;max-width:96vw;
+  animation:riseIn .8s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* Left panel — brand */
+.brand-panel{
+  width:340px;flex-shrink:0;
+  background:linear-gradient(160deg,var(--moss) 0%,var(--bark) 100%);
+  padding:52px 36px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.brand-panel::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.brand-logo{
+  display:flex;align-items:center;gap:14px;position:relative;z-index:1;
+}
+.logo-mark{
+  width:54px;height:54px;border-radius:16px;
+  background:linear-gradient(135deg,var(--sage),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.brand-name span{color:var(--mint);font-style:italic}
+.brand-body{position:relative;z-index:1;}
+.brand-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:36px;font-weight:600;
+  color:#fff;line-height:1.2;
+  margin-bottom:18px;
+}
+.brand-tagline em{color:var(--mint);font-style:italic}
+.brand-desc{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.7;}
+.brand-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  position:relative;z-index:1;
+}
+.stat-pill{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:12px 14px;
+}
+.stat-pill .num{font-size:22px;font-weight:600;color:var(--mint)}
+.stat-pill .lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* Right panel — form */
+.form-panel{flex:1;padding:48px 44px;display:flex;flex-direction:column;justify-content:center;}
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);border-radius:12px;padding:4px;margin-bottom:36px;}
+.tab{flex:1;padding:9px;border:none;background:none;color:rgba(255,255,255,.45);font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:500;border-radius:9px;cursor:pointer;transition:all .25s;}
+.tab.active{background:var(--leaf);color:#fff;box-shadow:0 4px 12px rgba(74,124,53,.4);}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#fff;margin-bottom:6px;}
+.form-sub{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:28px;}
+
+.form-group{margin-bottom:18px;position:relative;}
+.form-group label{display:block;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.45);margin-bottom:8px;}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;opacity:.6;}
+input[type=text],input[type=email],input[type=password]{
+  width:100%;padding:13px 14px 13px 44px;
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  color:#fff;font-family:'Outfit',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s,background .2s,box-shadow .2s;
+}
+input::placeholder{color:rgba(255,255,255,.25);}
+input:focus{border-color:var(--sage);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(109,168,78,.18);}
+.toggle-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;opacity:.5;color:#fff;transition:opacity .2s;}
+.toggle-eye:hover{opacity:1;}
+.err-msg{display:none;font-size:12px;color:#f87171;margin-top:6px;padding-left:4px;}
+.err-msg.show{display:block;}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.forgot-link{font-size:12.5px;color:var(--mint);text-decoration:none;float:right;margin-top:-12px;margin-bottom:20px;display:block;text-align:right;transition:opacity .2s;}
+.forgot-link:hover{opacity:.7;}
+
+.btn-submit{
+  width:100%;padding:14px;border:none;border-radius:13px;
+  background:linear-gradient(135deg,var(--leaf),var(--sage));
+  color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;
+  cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(74,124,53,.4);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(74,124,53,.5);}
+.btn-submit:active{transform:translateY(0);}
+.btn-submit .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.25);transform:scale(0);animation:ripple .6s linear;pointer-events:none;}
+@keyframes ripple{to{transform:scale(4);opacity:0;}}
+.btn-loader{display:none;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:rgba(255,255,255,.25);font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1);}
+
+.global-err{
+  display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);
+  border-radius:10px;padding:12px 14px;font-size:13px;color:#fca5a5;
+  margin-bottom:16px;text-align:center;
+}
+.global-err.show{display:block;}
+.global-success{
+  display:none;background:rgba(74,124,53,.15);border:1px solid rgba(74,124,53,.4);
+  border-radius:10px;padding:12px 14px;font-size:13px;color:var(--mint);
+  margin-bottom:16px;text-align:center;
+}
+.global-success.show{display:block;}
+.terms{font-size:11.5px;color:rgba(255,255,255,.3);text-align:center;margin-top:14px;line-height:1.5;}
+.terms a{color:var(--mint);text-decoration:none;}
+
+/* Forgot panel */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* Responsive */
+@media(max-width:700px){
+  .brand-panel{display:none;}
+  .card-wrap{width:100%;border-radius:0;min-height:100vh;align-items:center;}
+  .form-panel{padding:36px 24px;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="leaf-deco">🌿</div>
+  <div class="leaf-deco">🌾</div>
+  <div class="leaf-deco">🍃</div>
+</div>
+
+<div class="card-wrap">
+  <!-- Brand Panel -->
+  <div class="brand-panel">
+    <div class="brand-logo">
+      <div class="logo-mark">🌾</div>
+      <div class="brand-name">Agri<span>CRM</span></div>
+    </div>
+    <div class="brand-body">
+      <div class="brand-tagline">Grow smarter,<br>farm <em>better.</em></div>
+      <div class="brand-desc">A complete agriculture CRM to manage farmers, track market prices, monitor weather, and grow your agricultural network.</div>
+    </div>
+    <div class="brand-stats">
+      <div class="stat-pill"><div class="num">2.4k+</div><div class="lbl">Farmers</div></div>
+      <div class="stat-pill"><div class="num">98%</div><div class="lbl">Uptime</div></div>
+      <div class="stat-pill"><div class="num">50+</div><div class="lbl">Crops</div></div>
+      <div class="stat-pill"><div class="num">Live</div><div class="lbl">Weather</div></div>
+    </div>
+  </div>
+
+  <!-- Form Panel -->
+  <div class="form-panel">
+
+    <!-- Login / Register Tabs -->
+    <div class="tabs" id="mainTabs">
+      <button class="tab active" onclick="switchTab('login')">Login</button>
+      <button class="tab" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="panel active" id="loginPanel">
+      <div class="form-title">Welcome back 👋</div>
+      <div class="form-sub">Sign in to your AgriCRM account</div>
+      <div class="global-err" id="loginErr">❌ Invalid username or password</div>
+      <div class="global-success" id="loginSuccess">✅ Login successful! Redirecting...</div>
+
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username"/>
+        </div>
+        <p class="err-msg" id="loginUserErr">Username is required</p>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password"/>
+          <button class="toggle-eye" type="button" onclick="togglePwd('loginPass',this)">👁</button>
+        </div>
+        <p class="err-msg" id="loginPassErr">Password is required</p>
+      </div>
+
+      <a class="forgot-link" href="#" onclick="switchTab('forgot');return false;">Forgot password?</a>
+
+      <button class="btn-submit" id="loginBtn" onclick="doLogin(event)">
+        <span id="loginBtnTxt">Sign In to Dashboard</span>
+        <div class="btn-loader" id="loginLoader"></div>
+      </button>
+      <p class="terms">By logging in you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a></p>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div class="panel" id="registerPanel">
+      <div class="form-title">Create account 🌱</div>
+      <div class="form-sub">Join AgriCRM and manage your farm network</div>
+      <div class="global-err" id="regErr"></div>
+      <div class="global-success" id="regSuccess"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">🧑</span>
+            <input type="text" id="regName" placeholder="Full name"/>
+          </div>
+          <p class="err-msg" id="regNameErr">Name is required</p>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regUser" placeholder="Username"/>
+          </div>
+          <p class="err-msg" id="regUserErr">Username is required</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input type="email" id="regEmail" placeholder="your@email.com"/>
+        </div>
+        <p class="err-msg" id="regEmailErr">Valid email is required</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regPass" placeholder="Min 6 chars"/>
+            <button class="toggle-eye" type="button" onclick="togglePwd('regPass',this)">👁</button>
+          </div>
+          <p class="err-msg" id="regPassErr">Min 6 characters</p>
+        </div>
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="regPass2" placeholder="Repeat password"/>
+          </div>
+          <p class="err-msg" id="regPass2Err">Passwords don't match</p>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="regBtn" onclick="doRegister(event)">
+        <span id="regBtnTxt">Create Account</span>
+        <div class="btn-loader" id="regLoader"></div>
+      </button>
+      <p class="terms">Already have an account? <a href="#" onclick="switchTab('login');return false;" style="color:var(--mint);">Sign in</a></p>
+    </div>
+
+    <!-- FORGOT PASSWORD PANEL -->
+    <div class="panel" id="forgotPanel">
+      <div class="form-title">Reset Password 🔑</div>
+      <div class="form-sub">Enter your email and we'll send reset instructions</div>
+      <div class="global-err" id="forgotErr"></div>
+      <div class="global-success" id="forgotSuccess"></div>
+
+      <div class="form-group">
+        <label>Registered Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">📧</span>
+          <input type="email" id="forgotEmail" placeholder="your@email.com"/>
+        </div>
+        <p class="err-msg" id="forgotEmailErr">Valid email required</p>
+      </div>
+
+      <button class="btn-submit" onclick="doForgot(event)">
+        <span>Send Reset Link</span>
+      </button>
+      <div class="divider">or</div>
+      <button class="btn-submit" style="background:rgba(255,255,255,.08);box-shadow:none;" onclick="switchTab('login')">
+        ← Back to Login
+      </button>
+    </div>
+
+  </div><!-- /form-panel -->
+</div><!-- /card-wrap -->
+
+<script>
+// ── Tab switching ──
+function switchTab(tab){
+  ['login','register','forgot'].forEach(t=>{
+    document.getElementById(t+'Panel').classList.remove('active');
+  });
+  document.getElementById(tab+'Panel').classList.add('active');
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.remove('active');
+    if((tab==='login'&&i===0)||(tab==='register'&&i===1)) el.classList.add('active');
+  });
+  document.getElementById('mainTabs').style.display=(tab==='forgot')?'none':'flex';
+}
+
+// ── Toggle password visibility ──
+function togglePwd(id,btn){
+  const inp=document.getElementById(id);
+  inp.type=inp.type==='password'?'text':'password';
+  btn.textContent=inp.type==='password'?'👁':'🙈';
+}
+
+// ── Ripple effect ──
+function addRipple(btn,e){
+  const r=document.createElement('span');r.className='ripple';
+  const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height);
+  r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  btn.appendChild(r);setTimeout(()=>r.remove(),700);
+}
+
+// ── Show/hide loading ──
+function setLoading(btnId,loaderId,txtId,loading){
+  document.getElementById(btnId).disabled=loading;
+  document.getElementById(loaderId).style.display=loading?'block':'none';
+  document.getElementById(txtId).style.display=loading?'none':'block';
+}
+
+// ── LOGIN ──
+async function doLogin(e){
+  addRipple(document.getElementById('loginBtn'),e);
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  let ok=true;
+  document.getElementById('loginUserErr').classList.remove('show');
+  document.getElementById('loginPassErr').classList.remove('show');
+  document.getElementById('loginErr').classList.remove('show');
+  document.getElementById('loginSuccess').classList.remove('show');
+  if(!u){document.getElementById('loginUserErr').classList.add('show');ok=false;}
+  if(!p){document.getElementById('loginPassErr').classList.add('show');ok=false;}
+  if(!ok)return;
+  setLoading('loginBtn','loginLoader','loginBtnTxt',true);
+  try{
+    const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const data=await res.json();
+    if(data.success){
+      sessionStorage.setItem('agri_user',JSON.stringify(data.user));
+      document.getElementById('loginSuccess').classList.add('show');
+      setTimeout(()=>window.location.href='dashboard.html',1000);
+    } else {
+      document.getElementById('loginErr').classList.add('show');
+      document.getElementById('loginErr').textContent='❌ '+(data.message||'Invalid username or password');
+    }
+  } catch{
+    // Demo fallback
+    if(u==='admin'&&p==='admin123'){
+      sessionStorage.setItem('agri_user',JSON.stringify({id:1,username:'admin',name:'Admin User',email:'admin@agri.com'}));
+      document.getElementById('loginSuccess').classList.add('show');
+      setTimeout(()=>window.location.href='dashboard.html',1000);
+    } else {
+      document.getElementById('loginErr').textContent='❌ Invalid username or password. (Demo: admin/admin123)';
+      document.getElementById('loginErr').classList.add('show');
+    }
+  }
+  setLoading('loginBtn','loginLoader','loginBtnTxt',false);
+}
+
+// ── REGISTER ──
+async function doRegister(e){
+  addRipple(document.getElementById('regBtn'),e);
+  ['regNameErr','regUserErr','regEmailErr','regPassErr','regPass2Err'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  document.getElementById('regErr').classList.remove('show');
+  document.getElementById('regSuccess').classList.remove('show');
+  const name=document.getElementById('regName').value.trim();
+  const user=document.getElementById('regUser').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value.trim();
+  const pass2=document.getElementById('regPass2').value.trim();
+  let ok=true;
+  if(!name){document.getElementById('regNameErr').classList.add('show');ok=false;}
+  if(!user){document.getElementById('regUserErr').classList.add('show');ok=false;}
+  if(!email||!email.includes('@')){document.getElementById('regEmailErr').classList.add('show');ok=false;}
+  if(pass.length<6){document.getElementById('regPassErr').classList.add('show');ok=false;}
+  if(pass!==pass2){document.getElementById('regPass2Err').classList.add('show');ok=false;}
+  if(!ok)return;
+  setLoading('regBtn','regLoader','regBtnTxt',true);
+  try{
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,username:user,email,password:pass})});
+    const data=await res.json();
+    if(data.success){
+      document.getElementById('regSuccess').textContent='✅ Account created! Please login.';
+      document.getElementById('regSuccess').classList.add('show');
+      setTimeout(()=>switchTab('login'),1800);
+    } else {
+      document.getElementById('regErr').textContent='❌ '+(data.message||'Registration failed');
+      document.getElementById('regErr').classList.add('show');
+    }
+  } catch{
+    document.getElementById('regSuccess').textContent='✅ Account created! (Demo mode — login with admin/admin123)';
+    document.getElementById('regSuccess').classList.add('show');
+    setTimeout(()=>switchTab('login'),2000);
+  }
+  setLoading('regBtn','regLoader','regBtnTxt',false);
+}
+
+// ── FORGOT ──
+async function doForgot(e){
+  document.getElementById('forgotEmailErr').classList.remove('show');
+  document.getElementById('forgotErr').classList.remove('show');
+  document.getElementById('forgotSuccess').classList.remove('show');
+  const email=document.getElementById('forgotEmail').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('forgotEmailErr').classList.add('show');return;}
+  try{
+    await fetch('/api/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+  } catch{}
+  document.getElementById('forgotSuccess').textContent='✅ Reset link sent to '+email+' (check spam folder)';
+  document.getElementById('forgotSuccess').classList.add('show');
+}
+
+// Enter key triggers login
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const active=document.querySelector('.panel.active').id;
+    if(active==='loginPanel') doLogin(e);
+    else if(active==='registerPanel') doRegister(e);
+  }
+});
+</script>
+</body>
+</html>

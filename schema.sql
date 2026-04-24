@@ -137,3 +137,57 @@ UNION ALL
 SELECT 'Prices',  COUNT(*) FROM market_prices
 UNION ALL
 SELECT 'Tasks',   COUNT(*) FROM tasks;
+
+
+-- ─────────────────────────────────────
+-- FINANCE ENTRIES TABLE  (income / expense tracker)
+-- ─────────────────────────────────────
+CREATE TABLE IF NOT EXISTS finance_entries (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    entry_type   ENUM('Income','Expense') NOT NULL DEFAULT 'Income',
+    amount       DECIMAL(12,2)   NOT NULL,
+    category     VARCHAR(100)    NULL,
+    entry_date   DATE            NULL,
+    farmer_name  VARCHAR(100)    NULL,
+    description  TEXT            NULL,
+    created_at   DATETIME        DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO finance_entries (entry_type, amount, category, entry_date, farmer_name, description) VALUES
+('Income',  45000.00, 'Crop Sale',  CURDATE(), 'Suresh Kumar', 'Wheat sold at Amritsar APMC'),
+('Expense',  8500.00, 'Fertilizer', CURDATE(), 'Rajesh Patil', 'NPK 50kg bags'),
+('Expense',  3200.00, 'Labour',     CURDATE(), 'Meena Devi',   'Field workers — 4 days'),
+('Income',  18000.00, 'Subsidy',    CURDATE(), NULL,           'Government scheme payout');
+
+
+-- ─────────────────────────────────────
+-- APP FEEDBACK TABLE  (users rate AgriCRM)
+-- ─────────────────────────────────────
+CREATE TABLE IF NOT EXISTS app_feedback (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100)    NOT NULL DEFAULT 'Anonymous',
+    rating      TINYINT         NOT NULL DEFAULT 5,
+    comment     TEXT            NOT NULL,
+    created_at  DATETIME        DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO app_feedback (name, rating, comment) VALUES
+('Ramesh',  5, 'Very helpful for managing all my farmers in one place. Weather advisory is super useful!'),
+('Anjali',  4, 'Good interface. Would love a mobile app too.');
+
+
+-- ─────────────────────────────────────
+-- FARMER REVIEWS TABLE  (admin notes about farmers)
+-- ─────────────────────────────────────
+CREATE TABLE IF NOT EXISTS farmer_reviews (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    farmer_name  VARCHAR(100)    NOT NULL,
+    rating       TINYINT         NOT NULL DEFAULT 5,
+    review       TEXT            NOT NULL,
+    review_date  DATE            NULL,
+    created_at   DATETIME        DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO farmer_reviews (farmer_name, rating, review, review_date) VALUES
+('Rajesh Patil', 5, 'Very disciplined farmer. Always pays back loans on time and follows advice.', CURDATE()),
+('Suresh Kumar', 4, 'Good output this season. Needs guidance on pest control next cycle.',          CURDATE());

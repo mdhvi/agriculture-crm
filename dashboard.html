@@ -355,6 +355,9 @@ tr:hover td{background:#f9fbf7;}
   <a class="sb-item" href="#" onclick="nav('market',this)"><span class="ico">📊</span><span>Market Prices</span></a>
   <div class="sb-section">CRM</div>
   <a class="sb-item" href="#" onclick="nav('tasks',this)"><span class="ico">📋</span><span>Tasks & Reminders</span><span class="sb-badge" id="taskBadge">0</span></a>
+  <a class="sb-item" href="#" onclick="nav('finance',this)"><span class="ico">💰</span><span>Finance</span></a>
+  <a class="sb-item" href="#" onclick="nav('feedback',this)"><span class="ico">⭐</span><span>Feedback & Reviews</span></a>
+  <a class="sb-item" href="#" onclick="nav('about',this)"><span class="ico">ℹ️</span><span>About AgriCRM</span></a>
   <a class="sb-item" href="#" onclick="nav('activity',this)"><span class="ico">📝</span><span>Activity Log</span></a>
   <div class="sb-bottom">
     <div class="sb-user">
@@ -404,6 +407,38 @@ tr:hover td{background:#f9fbf7;}
       <div class="stat-card stat-accent2" data-emoji="🌡"><div class="stat-label">Temperature</div><div class="stat-val" id="sTemp">--°C</div><div class="stat-sub" id="sTempCity">Loading...</div></div>
       <div class="stat-card stat-accent3" data-emoji="📊"><div class="stat-label">Crop Prices</div><div class="stat-val" id="sPrices">0</div><div class="stat-sub">Listed</div></div>
       <div class="stat-card stat-accent4" data-emoji="📋"><div class="stat-label">Pending Tasks</div><div class="stat-val" id="sTasks">0</div><div class="stat-sub">Due soon</div></div>
+    </div>
+
+    <!-- Why AgriCRM info banner -->
+    <div class="tcard" style="margin-bottom:24px;background:linear-gradient(135deg,#fdf5dc 0%,#f0f5ec 100%);border-left:4px solid var(--leaf);">
+      <div style="padding:20px 22px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--soil);margin-bottom:6px;">🌾 Why AgriCRM?</div>
+        <div style="font-size:13.5px;color:var(--text);line-height:1.6;margin-bottom:14px;">
+          AgriCRM is an all-in-one platform built for agri-businesses, FPOs and rural advisors to manage farmers, crops, weather, market prices and finances — all from a single dashboard. Replace scattered notebooks and spreadsheets with one organized, searchable system.
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="background:#fff;padding:12px 14px;border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:20px;margin-bottom:4px;">👨‍🌾</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--soil);">Farmer Records</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">Centralize every farmer's land, crops & contact</div>
+          </div>
+          <div style="background:#fff;padding:12px 14px;border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:20px;margin-bottom:4px;">🌤</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--soil);">Live Weather</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">Real-time forecasts + farming advisory</div>
+          </div>
+          <div style="background:#fff;padding:12px 14px;border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:20px;margin-bottom:4px;">📊</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--soil);">Market Prices</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">Track mandi rates, sell at the best price</div>
+          </div>
+          <div style="background:#fff;padding:12px 14px;border-radius:12px;border:1px solid var(--border);">
+            <div style="font-size:20px;margin-bottom:4px;">💰</div>
+            <div style="font-size:12.5px;font-weight:700;color:var(--soil);">Finance Tracker</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">Income vs expenses, know your real profit</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Quick weather -->
@@ -563,6 +598,144 @@ tr:hover td{background:#f9fbf7;}
     </div>
   </div>
 
+
+  <!-- ═══ FINANCE ═══ -->
+  <div class="section" id="sec-finance">
+    <div class="stats-row">
+      <div class="stat-card stat-accent" data-emoji="📈"><div class="stat-label">Total Income</div><div class="stat-val" id="finIncome">₹0</div><div class="stat-sub">All time</div></div>
+      <div class="stat-card stat-accent4" data-emoji="📉"><div class="stat-label">Total Expense</div><div class="stat-val" id="finExpense">₹0</div><div class="stat-sub">All time</div></div>
+      <div class="stat-card stat-accent2" data-emoji="💰"><div class="stat-label">Net Profit</div><div class="stat-val" id="finProfit">₹0</div><div class="stat-sub" id="finProfitSub">--</div></div>
+      <div class="stat-card stat-accent3" data-emoji="🧾"><div class="stat-label">Entries</div><div class="stat-val" id="finCount">0</div><div class="stat-sub">Transactions</div></div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="tcard-title">💰 Finance Handling — Income & Expenses</div>
+        <div class="tcard-actions">
+          <input class="search-box" type="text" placeholder="Search..." id="finSearch" oninput="renderFinance()"/>
+          <button class="btn btn-primary" onclick="openModal('financeModal','add')">+ Add Entry</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Farmer</th><th>Amount (₹)</th><th>Actions</th></tr></thead>
+        <tbody id="financeTbl"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ FEEDBACK & REVIEWS ═══ -->
+  <div class="section" id="sec-feedback">
+    <div style="display:flex;gap:8px;margin-bottom:18px;background:var(--card);padding:6px;border-radius:12px;border:1px solid var(--border);width:fit-content;">
+      <button class="btn btn-primary btn-sm" id="fbTab1" onclick="fbSwitch('app')">⭐ App Feedback</button>
+      <button class="btn btn-outline btn-sm" id="fbTab2" onclick="fbSwitch('farmer')">👨‍🌾 Farmer Reviews</button>
+    </div>
+
+    <!-- App feedback tab -->
+    <div id="fbApp">
+      <div class="tcard" style="margin-bottom:18px;">
+        <div style="padding:20px 22px;">
+          <div style="font-size:15px;font-weight:700;color:var(--soil);margin-bottom:14px;">📝 Share your feedback about AgriCRM</div>
+          <div class="form-row-2">
+            <div class="fg"><label>Your Name</label><input type="text" id="fbName" placeholder="Your name"/></div>
+            <div class="fg"><label>Rating</label>
+              <select id="fbRating">
+                <option value="5">★★★★★ — Excellent</option>
+                <option value="4">★★★★☆ — Very Good</option>
+                <option value="3">★★★☆☆ — Good</option>
+                <option value="2">★★☆☆☆ — Fair</option>
+                <option value="1">★☆☆☆☆ — Poor</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg"><label>Comments</label><textarea id="fbComment" placeholder="What do you like? What can we improve?"></textarea></div>
+          <button class="btn btn-primary" onclick="saveAppFeedback()">📤 Submit Feedback</button>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-head"><div class="tcard-title">⭐ All App Feedback</div>
+          <div style="font-size:13px;color:var(--muted);">Avg rating: <b id="fbAvg" style="color:var(--gold)">--</b></div>
+        </div>
+        <div id="fbAppList" style="padding:8px 20px 20px;"></div>
+      </div>
+    </div>
+
+    <!-- Farmer reviews tab -->
+    <div id="fbFarmer" style="display:none;">
+      <div class="tcard">
+        <div class="tcard-head">
+          <div class="tcard-title">👨‍🌾 Farmer Reviews & Notes</div>
+          <button class="btn btn-primary" onclick="openModal('farmerReviewModal','add')">+ Add Review</button>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Farmer</th><th>Date</th><th>Rating</th><th>Review</th><th>Actions</th></tr></thead>
+          <tbody id="frReviewTbl"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABOUT ═══ -->
+  <div class="section" id="sec-about">
+    <div class="profile-hero" style="margin-bottom:20px;">
+      <div class="prof-av-big">🌾</div>
+      <div>
+        <div class="prof-name">About AgriCRM</div>
+        <div class="prof-user">Empowering agriculture through technology</div>
+      </div>
+    </div>
+    <div class="tcard" style="margin-bottom:18px;">
+      <div style="padding:24px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--soil);font-weight:700;margin-bottom:10px;">Why this webapp is useful</div>
+        <p style="font-size:14px;line-height:1.7;color:var(--text);margin-bottom:14px;">
+          <b>AgriCRM</b> is a complete farm-management web platform built for agri-businesses, FPOs (Farmer Producer Organizations), cooperatives, agronomists, and field officers. It puts farmer data, crop tracking, weather intelligence, market prices, task reminders, finance and feedback in <b>one organized dashboard</b> — so you spend less time on paperwork and more time helping farmers grow.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;">
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">📋</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Replace messy notebooks</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">No more paper records or scattered Excel files — every farmer profile, crop and contact is searchable in seconds.</div>
+          </div>
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">🌦</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Smart farming advisory</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">Live weather + automatic suggestions on irrigation, pest risk, and field work — based on real conditions.</div>
+          </div>
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">📊</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Market intelligence</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">Track mandi rates and price trends to advise farmers when and where to sell for the best return.</div>
+          </div>
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">💰</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Finance handling</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">Log income & expenses (seeds, fertilizer, labour, sales) and see net profit instantly.</div>
+          </div>
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">📋</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Never miss a task</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">Reminders for fertilizer, irrigation, harvest and follow-ups — with priority levels.</div>
+          </div>
+          <div style="background:var(--bg);padding:16px;border-radius:14px;border:1px solid var(--border);">
+            <div style="font-size:22px;margin-bottom:6px;">⭐</div>
+            <div style="font-weight:700;color:var(--soil);margin-bottom:4px;">Feedback & reviews</div>
+            <div style="font-size:12.5px;color:var(--muted);line-height:1.5;">Capture farmer feedback and rate the platform — continuously improve service quality.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div style="padding:22px;">
+        <div style="font-weight:700;color:var(--soil);font-size:15px;margin-bottom:8px;">🎯 Who is it for?</div>
+        <ul style="font-size:13.5px;color:var(--text);line-height:1.9;padding-left:20px;">
+          <li>Farmer Producer Organizations (FPOs) and cooperatives</li>
+          <li>Agri-input dealers, seed and fertilizer companies</li>
+          <li>NGOs and government extension officers working with farmers</li>
+          <li>Agronomists, consultants and rural advisors</li>
+          <li>Agritech startups managing farmer networks</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /content -->
 </div><!-- /main -->
 
@@ -679,6 +852,65 @@ tr:hover td{background:#f9fbf7;}
   </div>
 </div>
 
+<!-- Finance Modal -->
+<div class="overlay" id="financeModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="financeModalTitle">Add Finance Entry</div>
+      <button class="modal-close" onclick="closeModal('financeModal')">✕</button>
+    </div>
+    <div class="form-row-2">
+      <div class="fg"><label>Type *</label>
+        <select id="finType">
+          <option value="Income">📈 Income</option>
+          <option value="Expense">📉 Expense</option>
+        </select>
+      </div>
+      <div class="fg"><label>Amount (₹) *</label><input type="number" id="finAmount" placeholder="e.g. 5000"/></div>
+    </div>
+    <div class="form-row-2">
+      <div class="fg"><label>Category</label>
+        <select id="finCategory">
+          <option>Crop Sale</option><option>Seeds</option><option>Fertilizer</option>
+          <option>Pesticide</option><option>Labour</option><option>Equipment</option>
+          <option>Transport</option><option>Loan</option><option>Subsidy</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>Date</label><input type="date" id="finDate"/></div>
+    </div>
+    <div class="fg"><label>Farmer (optional)</label><input type="text" id="finFarmer" placeholder="Associated farmer"/></div>
+    <div class="fg"><label>Description</label><textarea id="finDesc" placeholder="What was this for?"></textarea></div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal('financeModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFinance()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- Farmer Review Modal -->
+<div class="overlay" id="farmerReviewModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Add Farmer Review</div>
+      <button class="modal-close" onclick="closeModal('farmerReviewModal')">✕</button>
+    </div>
+    <div class="form-row-2">
+      <div class="fg"><label>Farmer Name *</label><input type="text" id="frFarmer" placeholder="Farmer name"/></div>
+      <div class="fg"><label>Rating</label>
+        <select id="frRating">
+          <option value="5">★★★★★</option><option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option><option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Review / Notes *</label><textarea id="frReview" placeholder="How is the farmer doing? Any observations..."></textarea></div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal('farmerReviewModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveFarmerReview()">Save Review</button>
+    </div>
+  </div>
+</div>
+
 <!-- Delete Confirm Modal -->
 <div class="overlay" id="deleteModal">
   <div class="modal del-modal">
@@ -701,7 +933,10 @@ let farmers = JSON.parse(localStorage.getItem('agri2_farmers')||'[]');
 let market  = JSON.parse(localStorage.getItem('agri2_market')||'[]');
 let tasks   = JSON.parse(localStorage.getItem('agri2_tasks')||'[]');
 let activity= JSON.parse(localStorage.getItem('agri2_activity')||'[]');
-let editIdx = {farmer:null,market:null,task:null};
+let finance = JSON.parse(localStorage.getItem('agri2_finance')||'[]');
+let appFb   = JSON.parse(localStorage.getItem('agri2_appfb')||'[]');
+let frRev   = JSON.parse(localStorage.getItem('agri2_frrev')||'[]');
+let editIdx = {farmer:null,market:null,task:null,finance:null};
 
 // ═══════════════════ INIT ═══════════════════
 window.onload = ()=>{
@@ -717,6 +952,7 @@ window.onload = ()=>{
   document.getElementById('fDate').valueAsDate=new Date();
   document.getElementById('mDate').valueAsDate=new Date();
   document.getElementById('tDue').valueAsDate=new Date();
+  const finDateEl=document.getElementById('finDate');if(finDateEl)finDateEl.valueAsDate=new Date();
   fetchWeather();
   renderAll();
   logActivity('🏠','Dashboard loaded','System');
@@ -729,7 +965,7 @@ function nav(name,el){
   document.getElementById('sec-'+name).classList.add('active');
   if(el) el.classList.add('active');
   else document.querySelector(`[onclick*="'${name}'"]`)?.classList.add('active');
-  const titles={dashboard:'Dashboard',weather:'Weather Info',farmers:'Farmers Management',market:'Market Prices',tasks:'Tasks & Reminders',activity:'Activity Log',profile:'Edit Profile'};
+  const titles={dashboard:'Dashboard',weather:'Weather Info',farmers:'Farmers Management',market:'Market Prices',tasks:'Tasks & Reminders',finance:'Finance Handling',feedback:'Feedback & Reviews',about:'About AgriCRM',activity:'Activity Log',profile:'Edit Profile'};
   setEl('pageTitle',titles[name]||name);
   setEl('pageBread','AgriCRM / '+(titles[name]||name));
   closeNotif();
@@ -971,7 +1207,125 @@ function saveProfile(){
 }
 
 // ═══════════════════ HELPERS ═══════════════════
-function renderAll(){renderFarmers();renderMarket();renderTasks();renderActivity();renderDash();}
+function renderAll(){renderFarmers();renderMarket();renderTasks();renderActivity();renderFinance();renderAppFeedback();renderFarmerReviews();renderDash();}
+
+// ═══════════════════ FINANCE ═══════════════════
+function renderFinance(){
+  const q=(document.getElementById('finSearch')?.value||'').toLowerCase();
+  const data=finance.filter(f=>!q||f.category?.toLowerCase().includes(q)||f.desc?.toLowerCase().includes(q)||f.farmer?.toLowerCase().includes(q));
+  const t=document.getElementById('financeTbl');
+  // Stats
+  const inc=finance.filter(f=>f.type==='Income').reduce((s,f)=>s+Number(f.amount||0),0);
+  const exp=finance.filter(f=>f.type==='Expense').reduce((s,f)=>s+Number(f.amount||0),0);
+  const profit=inc-exp;
+  setEl('finIncome','₹'+inc.toLocaleString('en-IN'));
+  setEl('finExpense','₹'+exp.toLocaleString('en-IN'));
+  setEl('finProfit',(profit>=0?'₹':'-₹')+Math.abs(profit).toLocaleString('en-IN'));
+  setEl('finProfitSub',profit>=0?'In profit ✅':'In loss ⚠️');
+  setEl('finCount',finance.length);
+  if(!data.length){t.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="empty-icon">💰</div><div class="empty-title">No finance entries</div><div class="empty-sub">Add your first income or expense</div></div></td></tr>`;return;}
+  t.innerHTML=data.map((f,i)=>{
+    const ri=finance.indexOf(f);
+    const cls=f.type==='Income'?'badge-green':'badge-red';
+    const sign=f.type==='Income'?'+':'-';
+    return `<tr><td>${i+1}</td><td>${f.date||'--'}</td>
+      <td><span class="badge ${cls}">${f.type}</span></td>
+      <td>${f.category||'--'}</td><td>${f.desc||'--'}</td><td>${f.farmer||'--'}</td>
+      <td><b style="color:${f.type==='Income'?'var(--moss)':'var(--red)'}">${sign}₹${Number(f.amount).toLocaleString('en-IN')}</b></td>
+      <td><div class="act-btns">
+        <button class="btn btn-outline btn-sm" onclick="editFinance(${ri})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="delConfirm(()=>{finance.splice(${ri},1);saveFin();renderFinance();logActivity('🗑','Finance entry deleted',f.category||'');toast('Entry deleted','success')})">🗑</button>
+      </div></td></tr>`;
+  }).join('');
+}
+function editFinance(i){
+  editIdx.finance=i;const f=finance[i];
+  setEl('financeModalTitle','Edit Finance Entry');
+  document.getElementById('finType').value=f.type||'Income';
+  document.getElementById('finAmount').value=f.amount||'';
+  document.getElementById('finCategory').value=f.category||'Other';
+  document.getElementById('finDate').value=f.date||'';
+  document.getElementById('finFarmer').value=f.farmer||'';
+  document.getElementById('finDesc').value=f.desc||'';
+  openModal('financeModal');
+}
+function saveFinance(){
+  const amount=document.getElementById('finAmount').value;
+  if(!amount||Number(amount)<=0){toast('Valid amount required','error');return;}
+  const data={type:document.getElementById('finType').value,amount:parseFloat(amount),category:document.getElementById('finCategory').value,date:document.getElementById('finDate').value||new Date().toISOString().slice(0,10),farmer:document.getElementById('finFarmer').value,desc:document.getElementById('finDesc').value};
+  if(editIdx.finance!==null){finance[editIdx.finance]=data;editIdx.finance=null;logActivity('✏️','Finance updated',data.category);}
+  else{finance.push(data);logActivity('💰',data.type+' added',data.category+' ₹'+data.amount);}
+  saveFin();closeModal('financeModal');renderFinance();
+  setEl('financeModalTitle','Add Finance Entry');
+  document.getElementById('finAmount').value='';document.getElementById('finDesc').value='';document.getElementById('finFarmer').value='';
+  toast('Finance entry saved!','success');
+}
+function saveFin(){
+  localStorage.setItem('agri2_finance',JSON.stringify(finance));
+  fetch('/api/finance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({finance})}).catch(()=>{});
+}
+
+// ═══════════════════ FEEDBACK & REVIEWS ═══════════════════
+function fbSwitch(which){
+  document.getElementById('fbApp').style.display=which==='app'?'block':'none';
+  document.getElementById('fbFarmer').style.display=which==='farmer'?'block':'none';
+  document.getElementById('fbTab1').className='btn btn-sm '+(which==='app'?'btn-primary':'btn-outline');
+  document.getElementById('fbTab2').className='btn btn-sm '+(which==='farmer'?'btn-primary':'btn-outline');
+}
+function saveAppFeedback(){
+  const name=document.getElementById('fbName').value.trim()||'Anonymous';
+  const rating=parseInt(document.getElementById('fbRating').value);
+  const comment=document.getElementById('fbComment').value.trim();
+  if(!comment){toast('Please write a comment','error');return;}
+  appFb.unshift({name,rating,comment,time:new Date().toLocaleString('en-IN')});
+  localStorage.setItem('agri2_appfb',JSON.stringify(appFb));
+  fetch('/api/feedback/app',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,rating,comment})}).catch(()=>{});
+  document.getElementById('fbName').value='';document.getElementById('fbComment').value='';
+  renderAppFeedback();logActivity('⭐','App feedback submitted',name+' — '+rating+'★');
+  toast('Thank you for your feedback!','success');
+}
+function renderAppFeedback(){
+  const el=document.getElementById('fbAppList');if(!el)return;
+  if(!appFb.length){el.innerHTML='<div class="empty"><div class="empty-icon">⭐</div><div class="empty-title">No feedback yet</div><div class="empty-sub">Be the first to share your thoughts!</div></div>';setEl('fbAvg','--');return;}
+  const avg=(appFb.reduce((s,f)=>s+Number(f.rating||0),0)/appFb.length).toFixed(1);
+  setEl('fbAvg',avg+' / 5 ★ ('+appFb.length+')');
+  el.innerHTML=appFb.map((f,i)=>{
+    const stars='★'.repeat(f.rating)+'☆'.repeat(5-f.rating);
+    return `<div style="padding:14px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div><b style="color:var(--soil);">${f.name}</b> <span style="color:var(--gold);font-size:14px;margin-left:6px;">${stars}</span></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:11px;color:var(--muted);">🕐 ${f.time}</span>
+          <button class="btn btn-danger btn-sm" onclick="delConfirm(()=>{appFb.splice(${i},1);localStorage.setItem('agri2_appfb',JSON.stringify(appFb));renderAppFeedback();toast('Removed','success')})">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:13.5px;color:var(--text);line-height:1.5;">${f.comment}</div>
+    </div>`;
+  }).join('');
+}
+function saveFarmerReview(){
+  const farmer=document.getElementById('frFarmer').value.trim();
+  const review=document.getElementById('frReview').value.trim();
+  if(!farmer||!review){toast('Farmer name and review required','error');return;}
+  const data={farmer,rating:parseInt(document.getElementById('frRating').value),review,date:new Date().toISOString().slice(0,10)};
+  frRev.unshift(data);
+  localStorage.setItem('agri2_frrev',JSON.stringify(frRev));
+  fetch('/api/feedback/farmer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
+  document.getElementById('frFarmer').value='';document.getElementById('frReview').value='';
+  closeModal('farmerReviewModal');renderFarmerReviews();logActivity('👨‍🌾','Farmer review added',farmer);
+  toast('Review saved!','success');
+}
+function renderFarmerReviews(){
+  const t=document.getElementById('frReviewTbl');if(!t)return;
+  if(!frRev.length){t.innerHTML=`<tr><td colspan="6"><div class="empty"><div class="empty-icon">👨‍🌾</div><div class="empty-title">No farmer reviews yet</div><div class="empty-sub">Click "Add Review" to start</div></div></td></tr>`;return;}
+  t.innerHTML=frRev.map((r,i)=>{
+    const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+    return `<tr><td>${i+1}</td><td><b>${r.farmer}</b></td><td>${r.date}</td>
+      <td><span style="color:var(--gold);">${stars}</span></td>
+      <td style="max-width:380px;">${r.review}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="delConfirm(()=>{frRev.splice(${i},1);localStorage.setItem('agri2_frrev',JSON.stringify(frRev));renderFarmerReviews();toast('Removed','success')})">🗑</button></td></tr>`;
+  }).join('');
+}
 function setEl(id,v){const e=document.getElementById(id);if(e)e.innerHTML=v;}
 
 function delConfirm(cb){

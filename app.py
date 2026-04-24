@@ -336,6 +336,100 @@ def get_activity():
 
 
 # ══════════════════════════════════════
+# FINANCE  (income / expense tracker)
+# ══════════════════════════════════════
+@app.route('/api/finance', methods=['GET'])
+def get_finance():
+    rows = query("SELECT * FROM finance_entries ORDER BY entry_date DESC, created_at DESC")
+    return jsonify({'success': True, 'finance': rows or []})
+
+@app.route('/api/finance', methods=['POST'])
+def save_finance_bulk():
+    """Bulk sync from frontend localStorage"""
+    d = request.get_json()
+    items = d.get('finance', [])
+    query("DELETE FROM finance_entries", fetch=False)
+    for f in items:
+        query(
+            "INSERT INTO finance_entries (entry_type,amount,category,entry_date,farmer_name,description) VALUES (%s,%s,%s,%s,%s,%s)",
+            (f.get('type','Income'), f.get('amount',0), f.get('category'),
+             f.get('date') or None, f.get('farmer'), f.get('desc')),
+            fetch=False
+        )
+    return jsonify({'success': True, 'saved': len(items)})
+
+@app.route('/api/finance/add', methods=['POST'])
+def add_finance():
+    d = request.get_json()
+    fid = query(
+        "INSERT INTO finance_entries (entry_type,amount,category,entry_date,farmer_name,description,created_at) VALUES (%s,%s,%s,%s,%s,%s,NOW())",
+        (d.get('type','Income'), d.get('amount',0), d.get('category'),
+         d.get('date') or None, d.get('farmer'), d.get('desc')),
+        fetch=False
+    )
+    log_activity(session.get('user_id',1), 'ADD_FINANCE', f"{d.get('type')} ₹{d.get('amount')} — {d.get('category')}")
+    return jsonify({'success': True, 'id': fid})
+
+@app.route('/api/finance/<int:fid>', methods=['DELETE'])
+def delete_finance(fid):
+    query("DELETE FROM finance_entries WHERE id=%s", (fid,), fetch=False)
+    return jsonify({'success': True})
+
+@app.route('/api/finance/summary', methods=['GET'])
+def finance_summary():
+    inc_row = query("SELECT COALESCE(SUM(amount),0) AS s FROM finance_entries WHERE entry_type='Income'")
+    exp_row = query("SELECT COALESCE(SUM(amount),0) AS s FROM finance_entries WHERE entry_type='Expense'")
+    income  = float(inc_row[0]['s'] or 0)
+    expense = float(exp_row[0]['s'] or 0)
+    return jsonify({'success': True, 'income': income, 'expense': expense, 'profit': income - expense})
+
+
+# ══════════════════════════════════════
+# FEEDBACK & REVIEWS
+# ══════════════════════════════════════
+@app.route('/api/feedback/app', methods=['GET'])
+def get_app_feedback():
+    rows = query("SELECT * FROM app_feedback ORDER BY created_at DESC")
+    avg_row = query("SELECT AVG(rating) AS a, COUNT(*) AS c FROM app_feedback")
+    avg = float(avg_row[0]['a'] or 0) if avg_row else 0
+    cnt = avg_row[0]['c'] if avg_row else 0
+    return jsonify({'success': True, 'feedback': rows or [], 'average': round(avg, 1), 'count': cnt})
+
+@app.route('/api/feedback/app', methods=['POST'])
+def add_app_feedback():
+    d = request.get_json()
+    name    = (d.get('name') or 'Anonymous').strip()[:100]
+    rating  = max(1, min(5, int(d.get('rating', 5))))
+    comment = (d.get('comment') or '').strip()[:1000]
+    if not comment:
+        return jsonify({'success': False, 'message': 'Comment required'}), 400
+    fid = query(
+        "INSERT INTO app_feedback (name,rating,comment,created_at) VALUES (%s,%s,%s,NOW())",
+        (name, rating, comment), fetch=False
+    )
+    return jsonify({'success': True, 'id': fid})
+
+@app.route('/api/feedback/farmer', methods=['GET'])
+def get_farmer_reviews():
+    rows = query("SELECT * FROM farmer_reviews ORDER BY created_at DESC")
+    return jsonify({'success': True, 'reviews': rows or []})
+
+@app.route('/api/feedback/farmer', methods=['POST'])
+def add_farmer_review():
+    d = request.get_json()
+    farmer = (d.get('farmer') or '').strip()[:100]
+    review = (d.get('review') or '').strip()[:2000]
+    if not farmer or not review:
+        return jsonify({'success': False, 'message': 'Farmer and review required'}), 400
+    rating = max(1, min(5, int(d.get('rating', 5))))
+    rid = query(
+        "INSERT INTO farmer_reviews (farmer_name,rating,review,review_date,created_at) VALUES (%s,%s,%s,%s,NOW())",
+        (farmer, rating, review, d.get('date') or None), fetch=False
+    )
+    return jsonify({'success': True, 'id': rid})
+
+
+# ══════════════════════════════════════
 # RUN
 # ══════════════════════════════════════
 if __name__ == '__main__':
